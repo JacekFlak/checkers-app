@@ -1,0 +1,17 @@
+.tile {
+  width: 100px;
+  height: 100px;
+  display: grid;
+  place-content: center;
+}
+.grey-tile {
+  background-color: grey;
+}
+
+.red-tile {
+  background-color: rgb(233, 55, 55);
+}
+
+.tile img {
+  width: 80px;
+}

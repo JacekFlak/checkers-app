@@ -1,5 +1,5 @@
-import './App.css';
-import Checkersboard from './components/Checkersboard';
+import "./App.css";
+import Checkersboard from "./components/Checkersboard/Checkersboard";
 
 function App() {
   return (
