@@ -13,24 +13,58 @@ interface Pawn {
 
 const pawns: Pawn[] = [];
 
-// TODO: use loop instead of static pushing pawns
+for (let i = 1; i < 8; i += 2) {
+  pawns.push({ image: "assets/images/white_pawn.png", x: i, y: 7 });
+  pawns.push({ image: "assets/images/white_pawn.png", x: i - 1, y: 6 });
+  pawns.push({ image: "assets/images/white_pawn.png", x: i, y: 5 });
 
-pawns.push({ image: "assets/images/white_pawn.png", x: 1, y: 7 });
-pawns.push({ image: "assets/images/white_pawn.png", x: 3, y: 7 });
-pawns.push({ image: "assets/images/white_pawn.png", x: 5, y: 7 });
-pawns.push({ image: "assets/images/white_pawn.png", x: 7, y: 7 });
+  pawns.push({ image: "assets/images/black_pawn.png", x: i - 1, y: 2 });
+  pawns.push({ image: "assets/images/black_pawn.png", x: i, y: 1 });
+  pawns.push({ image: "assets/images/black_pawn.png", x: i - 1, y: 0 });
+}
 
-pawns.push({ image: "assets/images/black_pawn.png", x: 0, y: 0 });
-pawns.push({ image: "assets/images/black_pawn.png", x: 2, y: 0 });
-pawns.push({ image: "assets/images/black_pawn.png", x: 4, y: 0 });
-pawns.push({ image: "assets/images/black_pawn.png", x: 6, y: 0 });
+// funkcja do generacji graczy i tworzenie dla nich pionków
+// ruch
+// klasa z pozycjami gracza, tak zeby potem przepisac
+// klasa/component do pilnowania zasad gry
+
+let activePiece: HTMLElement | null = null;
+
+function grabPiece(e: React.MouseEvent) {
+  const element = e.target as HTMLElement;
+  if (element.classList.contains("chess-piece")) {
+    console.log(e.target);
+    const x = e.clientX - 50;
+    const y = e.clientY - 50;
+    element.style.position = "absolute";
+    element.style.left = `${x}px`;
+    element.style.top = `${y}px`;
+
+    activePiece = element;
+  }
+}
+
+function movePiece(e: React.MouseEvent) {
+  if (activePiece && activePiece.classList.contains("chess-piece")) {
+    const x = e.clientX - 50;
+    const y = e.clientY - 50;
+    activePiece.style.position = "absolute";
+    activePiece.style.left = `${x}px`;
+    activePiece.style.top = `${y}px`;
+  }
+}
+
+function dropPiece(e: React.MouseEvent) {
+  if (activePiece) {
+    activePiece = null;
+  }
+}
 
 export default function Checkersboard() {
   let board = [];
 
   for (let j = vertical.length - 1; j >= 0; j--) {
     for (let i = 0; i < horizontal.length; i++) {
-      
       const number = j + i + 2;
       let image = undefined;
 
@@ -42,5 +76,14 @@ export default function Checkersboard() {
       board.push(<Tile image={image} number={number} />);
     }
   }
-  return <div id="checkersboard">{board}</div>;
+  return (
+    <div
+      onMouseMove={(e) => movePiece(e)}
+      onMouseDown={(e) => grabPiece(e)}
+      onMouseUp={(e) => dropPiece(e)}
+      id="checkersboard"
+    >
+      {board}
+    </div>
+  );
 }
