@@ -36,10 +36,9 @@ function grabPiece(e: React.MouseEvent) {
     console.log(e.target);
     const x = e.clientX - 50;
     const y = e.clientY - 50;
-    element.style.position = "absolute";
     element.style.left = `${x}px`;
     element.style.top = `${y}px`;
-
+    element.style.position = "absolute";
     activePiece = element;
   }
 }
@@ -48,9 +47,9 @@ function movePiece(e: React.MouseEvent) {
   if (activePiece && activePiece.classList.contains("chess-piece")) {
     const x = e.clientX - 50;
     const y = e.clientY - 50;
-    activePiece.style.position = "absolute";
     activePiece.style.left = `${x}px`;
     activePiece.style.top = `${y}px`;
+    activePiece.style.position = "absolute";
   }
 }
 
@@ -79,8 +78,8 @@ export default function Checkersboard() {
   return (
     <div
       onMouseMove={(e) => movePiece(e)}
-      onMouseDown={(e) => grabPiece(e)}
-      onMouseUp={(e) => dropPiece(e)}
+      onPointerDown={(e) => grabPiece(e)}
+      onPointerUp={(e) => dropPiece(e)}
       id="checkersboard"
     >
       {board}
