@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Tile from "../Tile/Tile";
 import "./Checkersboard.css";
 
@@ -23,43 +23,60 @@ for (let i = 1; i < 8; i += 2) {
   pawns.push({ image: "assets/images/black_pawn.png", x: i - 1, y: 0 });
 }
 
-// funkcja do generacji graczy i tworzenie dla nich pionków
-// ruch
-// klasa z pozycjami gracza, tak zeby potem przepisac
-// klasa/component do pilnowania zasad gry
-
-let activePiece: HTMLElement | null = null;
-
-function grabPiece(e: React.MouseEvent) {
-  const element = e.target as HTMLElement;
-  if (element.classList.contains("chess-piece")) {
-    console.log(e.target);
-    const x = e.clientX - 50;
-    const y = e.clientY - 50;
-    element.style.left = `${x}px`;
-    element.style.top = `${y}px`;
-    element.style.position = "absolute";
-    activePiece = element;
-  }
-}
-
-function movePiece(e: React.MouseEvent) {
-  if (activePiece && activePiece.classList.contains("chess-piece")) {
-    const x = e.clientX - 50;
-    const y = e.clientY - 50;
-    activePiece.style.left = `${x}px`;
-    activePiece.style.top = `${y}px`;
-    activePiece.style.position = "absolute";
-  }
-}
-
-function dropPiece(e: React.MouseEvent) {
-  if (activePiece) {
-    activePiece = null;
-  }
-}
-
 export default function Checkersboard() {
+  const checkersBoardRef = useRef<HTMLDivElement>(null);
+
+  let activePiece: HTMLElement | null = null;
+
+  function grabPiece(e: React.MouseEvent) {
+    const element = e.target as HTMLElement;
+
+    if (element.classList.contains("chess-piece")) {
+      console.log(e.target);
+      const x = e.clientX - 50;
+      const y = e.clientY - 50;
+      element.style.left = `${x}px`;
+      element.style.top = `${y}px`;
+      element.style.position = "absolute";
+      activePiece = element;
+    }
+  }
+
+  function movePiece(e: React.MouseEvent) {
+    const checkersboard = checkersBoardRef.current;
+    if (activePiece && checkersboard) {
+      const minX = checkersboard.offsetLeft - 25;
+      const minY = checkersboard.offsetTop - 25;
+      const maxX = checkersboard.offsetLeft + checkersboard.clientWidth - 75;
+      const maxY = checkersboard.offsetTop + checkersboard.clientHeight - 75;
+      const x = e.clientX - 50;
+      const y = e.clientY - 50;
+      activePiece.style.position = "absolute";
+
+      if (x < minX) {
+        activePiece.style.left = `${minX}px`;
+      } else if (x > maxX) {
+        activePiece.style.left = `${maxX}px`;
+      } else {
+        activePiece.style.left = `${x}px`;
+      }
+
+      if (y < minY) {
+        activePiece.style.top = `${minY}px`;
+      } else if (y > maxY) {
+        activePiece.style.top = `${maxY}px`;
+      } else {
+        activePiece.style.top = `${y}px`;
+      }
+    }
+  }
+
+  function dropPiece(e: React.MouseEvent) {
+    if (activePiece) {
+      activePiece = null;
+    }
+  }
+
   let board = [];
 
   for (let j = vertical.length - 1; j >= 0; j--) {
@@ -81,6 +98,7 @@ export default function Checkersboard() {
       onPointerDown={(e) => grabPiece(e)}
       onPointerUp={(e) => dropPiece(e)}
       id="checkersboard"
+      ref={checkersBoardRef}
     >
       {board}
     </div>
