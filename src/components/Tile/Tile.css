@@ -17,7 +17,7 @@
   cursor: grab;
 }
 
-.tile .chess-piece:active {
+.tile .chess-piece:active { 
   cursor: grabbing;
 }
 
